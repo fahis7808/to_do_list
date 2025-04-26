@@ -9,6 +9,7 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final TextInputType? keyboard;
   final bool obscureText;
+  final int minLines;
 
   const CustomTextField({
     super.key,
@@ -18,7 +19,7 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.onChanged,
     this.keyboard,
-    this.obscureText = false,
+    this.obscureText = false, this.minLines =1,
   });
 
   @override
@@ -55,12 +56,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
       controller: controller,
       readOnly: widget.readOnly,
       keyboardType: widget.keyboard,
+      minLines: widget.minLines,
+      maxLines: widget.minLines+1,
       style: TextStyle(fontSize: 16.sp),
       obscureText: widget.obscureText,
       decoration: InputDecoration(
         labelText: widget.labelText,
         labelStyle: TextStyle(fontSize: 16.sp),
-        prefixIcon: Icon(widget.prefixIcon, size: 22.sp),
+        prefixIcon:widget.prefixIcon != null ? Icon(widget.prefixIcon, size: 22.sp) : null,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.w)),
       ),
     );
