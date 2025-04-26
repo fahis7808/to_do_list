@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:untitled/utlities/colors.dart';
 
 class CustomButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -15,7 +16,7 @@ class CustomButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 15.w),
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: AppColor.primaryClr,
           borderRadius: BorderRadius.circular(3.w),
         ),
         child: Text(
