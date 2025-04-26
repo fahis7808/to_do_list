@@ -6,6 +6,7 @@ import 'package:untitled/views/home_page.dart';
 import 'package:untitled/views/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:untitled/views/registration_screen.dart';
+import 'package:untitled/views/screen_flow.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +34,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
-          initialRoute: "/login",
+          initialRoute: "/screen_flow",
           routes: {
+            "/screen_flow" :(context) => ScreenFlow(),
             "/login": (context) => LoginScreen(),
             "/registration": (context) => RegistrationPage(),
             "/home": (context) => HomePage(),
