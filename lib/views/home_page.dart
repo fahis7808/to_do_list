@@ -9,16 +9,27 @@ import 'package:untitled/view_models/home_provider.dart';
 import 'package:untitled/views/add_task_page.dart';
 import 'package:untitled/widget/custom_success_alert.dart';
 
+import '../view_models/auth_provider.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<HomeProvider>(context);
+    final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.primaryClr,
         title: Center(child: Text("My Task", style: AppFont.appBarTxt)),
+        actions: [
+          GestureDetector(
+              onTap: (){
+                authProvider.logOut();
+                Navigator.pushReplacementNamed(context, "/login");
+              },
+              child: Icon(Icons.logout, color: AppColor.white)),
+        ],
       ),
       body: StreamBuilder<List<TaskModel>>(
         stream: provider.getTasks(),

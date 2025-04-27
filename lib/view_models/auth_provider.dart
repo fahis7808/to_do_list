@@ -65,4 +65,8 @@ class AuthenticationProvider extends ChangeNotifier {
       return "Email and Password Can't be Empty";
     }
   }
+
+  Future logOut() async{
+    await _auth.signOut();
+  }
 }

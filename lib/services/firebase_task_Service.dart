@@ -30,6 +30,10 @@ class FirebaseTaskService {
     await _ref.doc(task?.id).set(data);
   }
 
+  Future updateTask(TaskModel task) async{
+    await _ref.doc(task.id).update(task.toMap());
+  }
+
   Future deleteTask(String taskId) async {
     await _ref.doc(taskId).delete();
   }

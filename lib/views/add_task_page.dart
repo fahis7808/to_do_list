@@ -64,21 +64,25 @@ class AddTaskPage extends StatelessWidget {
                         vertical: 1.5.h,
                         horizontal: 4.w,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         final email = provider.email?.trim();
+
                         if (email == null || email.isEmpty) {
                           return;
                         }
-                        provider.taskModel.sharedWith ??= [];
-
-                        if (!provider.taskModel.sharedWith!.contains(email)) {
-                          provider.taskModel.sharedWith!.add(email);
+                        if (taskModel != null) {
+                          taskModel!.sharedWith ??= [];
+                          if (!taskModel!.sharedWith!.contains(email)) {
+                            taskModel!.sharedWith!.add(email);
+                          }
+                        } else {
+                          provider.taskModel.sharedWith ??= [];
+                          if (!provider.taskModel.sharedWith!.contains(email)) {
+                            provider.taskModel.sharedWith!.add(email);
+                          }
                         }
-
                         provider.email = "";
                         provider.onRefresh();
-
-                        debugPrint(provider.taskModel.sharedWith.toString());
                       },
                     ),
                   ],
@@ -103,14 +107,19 @@ class AddTaskPage extends StatelessWidget {
                   child: CustomButton(
                     txt: "Save",
                     onPressed: () {
-                      if (provider.taskModel.title != null) {
-                        provider.addTask();
+                      if (taskModel!.id!.isNotEmpty) {
+                        provider.updateTask(taskModel!);
                         Navigator.pop(context);
                       } else {
-                        final snackBar = CustomSnackBar.errorSnackBar(
-                          "Task Can't be empty",
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        if (provider.taskModel.title != null) {
+                          provider.addTask();
+                          Navigator.pop(context);
+                        } else {
+                          final snackBar = CustomSnackBar.errorSnackBar(
+                            "Task Can't be empty",
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       }
                     },
                   ),

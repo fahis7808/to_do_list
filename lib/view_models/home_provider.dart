@@ -12,17 +12,19 @@ class HomeProvider extends ChangeNotifier {
     _email = value;
   }
 
-
   Stream<List<TaskModel>> getTasks() {
     String? mail = FirebaseAuth.instance.currentUser?.email;
     return FirebaseTaskService().getTask(mail.toString());
   }
 
   TaskModel taskModel = TaskModel();
+
   Future addTask() async {
     String? mail = FirebaseAuth.instance.currentUser?.email;
 
-    List<String> updatedShareList = List<String>.from(taskModel.sharedWith ?? []);
+    List<String> updatedShareList = List<String>.from(
+      taskModel.sharedWith ?? [],
+    );
     updatedShareList.add(mail!);
     taskModel = TaskModel(
       title: taskModel.title,
@@ -34,11 +36,13 @@ class HomeProvider extends ChangeNotifier {
     taskModel.sharedWith = [];
   }
 
+  Future updateTask(TaskModel task) async{
+    await FirebaseTaskService().updateTask(task);
+  }
+
   Future deleteTask(String taskId) async {
     await FirebaseTaskService().deleteTask(taskId);
   }
-
-
 
   onRefresh() {
     notifyListeners();
