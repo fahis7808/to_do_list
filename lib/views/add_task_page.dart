@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:untitled/model/task_model.dart';
 import 'package:untitled/utlities/app_font.dart';
 import 'package:untitled/utlities/colors.dart';
+import 'package:untitled/view_models/home_provider.dart';
 import 'package:untitled/widget/custom_button.dart';
 import 'package:untitled/widget/custom_text_field.dart';
 
+import '../widget/sustom_snack_bar.dart';
+
 class AddTaskPage extends StatelessWidget {
-  const AddTaskPage({super.key});
+  final TaskModel? taskModel;
+
+  const AddTaskPage({super.key, this.taskModel});
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<HomeProvider>(context, listen: false);
     return AlertDialog(
       scrollable: true,
       title: Text("Add New Task", style: AppFont.head),
@@ -17,11 +25,66 @@ class AddTaskPage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
-            CustomTextField(value: "", labelText: "New Task"),
+            CustomTextField(
+              value: taskModel?.title.toString() ?? "",
+              labelText: "New Task",
+              onChanged: (val) {
+                taskModel?.title = val;
+                provider.taskModel.title = val;
+              },
+            ),
             SizedBox(height: 1.h),
-            CustomTextField(value: "", labelText: "Description", minLines: 2),
+            CustomTextField(
+              value: taskModel?.description ?? "",
+              labelText: "Description",
+              minLines: 2,
+              onChanged: (val) {
+                taskModel?.description = val;
+                provider.taskModel.description = val;
+              },
+            ),
             SizedBox(height: 1.h),
-            CustomTextField(value: "", labelText: "Email who want to share"),
+            Consumer<HomeProvider>(
+              builder: (context, provider, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        value: provider.email,
+                        labelText: "Email who want to share",
+                        onChanged: (val) {
+                          provider.email = val;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    CustomButton(
+                      txt: "Add",
+                      padding: EdgeInsets.symmetric(
+                        vertical: 1.5.h,
+                        horizontal: 4.w,
+                      ),
+                      onPressed: () {
+                        final email = provider.email?.trim();
+                        if (email == null || email.isEmpty) {
+                          return;
+                        }
+                        provider.taskModel.sharedWith ??= [];
+
+                        if (!provider.taskModel.sharedWith!.contains(email)) {
+                          provider.taskModel.sharedWith!.add(email);
+                        }
+
+                        provider.email = "";
+                        provider.onRefresh();
+
+                        debugPrint(provider.taskModel.sharedWith.toString());
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
             SizedBox(height: 2.h),
             Row(
               children: [
@@ -35,9 +98,23 @@ class AddTaskPage extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(width: 1.2.w),
-
-                Expanded(child: CustomButton(txt: "Save")),
+                SizedBox(width: 10),
+                Expanded(
+                  child: CustomButton(
+                    txt: "Save",
+                    onPressed: () {
+                      if (provider.taskModel.title != null) {
+                        provider.addTask();
+                        Navigator.pop(context);
+                      } else {
+                        final snackBar = CustomSnackBar.errorSnackBar(
+                          "Task Can't be empty",
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
           ],
