@@ -8,18 +8,23 @@ class FirebaseTaskService {
     TASK_COLLECTION_REF,
   );
 
-  Stream<List<TaskModel>> getTask() {
-    return _ref.orderBy("createdAt", descending: true).snapshots().map((e) {
-      return e.docs.map((val) {
-        return TaskModel.fromMap(val.data() as Map<String, dynamic>);
-      }).toList();
-    });
+  Stream<List<TaskModel>> getTask(String email) {
+    return _ref
+        .where('sharedWith', arrayContains: email)
+        .snapshots()
+        .map(
+          (e) =>
+              e.docs
+                  .map(
+                    (val) =>
+                        TaskModel.fromMap(val.data() as Map<String, dynamic>),
+                  )
+                  .toList(),
+        );
   }
 
   Future<void> addTask(TaskModel? task) async {
-    String newId = _ref
-        .doc()
-        .id;
+    String newId = _ref.doc().id;
     task?.id = newId;
     final data = task?.toMap();
     await _ref.doc(task?.id).set(data);

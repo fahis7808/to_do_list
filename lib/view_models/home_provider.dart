@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:untitled/model/task_model.dart';
 import 'package:untitled/services/firebase_task_Service.dart';
@@ -11,22 +12,33 @@ class HomeProvider extends ChangeNotifier {
     _email = value;
   }
 
-  TaskModel taskModel = TaskModel();
-
 
   Stream<List<TaskModel>> getTasks() {
-    return FirebaseTaskService().getTask();
+    String? mail = FirebaseAuth.instance.currentUser?.email;
+    return FirebaseTaskService().getTask(mail.toString());
   }
 
+  TaskModel taskModel = TaskModel();
   Future addTask() async {
-    taskModel = TaskModel(createdAt: DateTime.now());
+    String? mail = FirebaseAuth.instance.currentUser?.email;
+
+    List<String> updatedShareList = List<String>.from(taskModel.sharedWith ?? []);
+    updatedShareList.add(mail!);
+    taskModel = TaskModel(
+      title: taskModel.title,
+      description: taskModel.description,
+      createdAt: DateTime.now(),
+      sharedWith: updatedShareList,
+    );
     await FirebaseTaskService().addTask(taskModel);
     taskModel.sharedWith = [];
   }
 
-  Future deleteTask(String taskId) async{
+  Future deleteTask(String taskId) async {
     await FirebaseTaskService().deleteTask(taskId);
   }
+
+
 
   onRefresh() {
     notifyListeners();
