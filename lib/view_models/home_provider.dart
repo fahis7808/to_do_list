@@ -10,6 +10,7 @@ class HomeProvider extends ChangeNotifier {
 
   set email(String? value) {
     _email = value;
+    notifyListeners();
   }
 
   Stream<List<TaskModel>> getTasks() {
@@ -46,5 +47,9 @@ class HomeProvider extends ChangeNotifier {
 
   onRefresh() {
     notifyListeners();
+  }
+
+  bool isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 }

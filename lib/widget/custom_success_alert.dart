@@ -27,7 +27,7 @@ class CustomSuccessAlert extends StatelessWidget {
           children: [
             CustomButton(
               txt: "Cancel",
-              btnClr: AppColor.bdClr,
+              btnClr: AppColor.bgClr,
               onPressed: () {
                 Navigator.pop(context);
               },

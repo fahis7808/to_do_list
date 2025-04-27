@@ -19,7 +19,7 @@ class RegistrationPage extends StatelessWidget {
       listen: false,
     );
     return Scaffold(
-      backgroundColor: AppColor.bdClr,
+      backgroundColor: AppColor.bgClr,
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),

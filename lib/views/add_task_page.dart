@@ -7,8 +7,7 @@ import 'package:untitled/utlities/colors.dart';
 import 'package:untitled/view_models/home_provider.dart';
 import 'package:untitled/widget/custom_button.dart';
 import 'package:untitled/widget/custom_text_field.dart';
-
-import '../widget/sustom_snack_bar.dart';
+import 'package:untitled/widget/custom_toust.dart';
 
 class AddTaskPage extends StatelessWidget {
   final TaskModel? taskModel;
@@ -68,8 +67,16 @@ class AddTaskPage extends StatelessWidget {
                         final email = provider.email?.trim();
 
                         if (email == null || email.isEmpty) {
+                          CustomToast().errorToast("Please enter an email");
                           return;
                         }
+                        final bool emailCheck = provider.isValidEmail(email);
+
+                        if (!emailCheck) {
+                          CustomToast().errorToast("Invalid Email");
+                          return;
+                        }
+
                         if (taskModel != null) {
                           taskModel!.sharedWith ??= [];
                           if (!taskModel!.sharedWith!.contains(email)) {
@@ -82,6 +89,7 @@ class AddTaskPage extends StatelessWidget {
                           }
                         }
                         provider.email = "";
+                        CustomToast().successToast("Email added to share list");
                         provider.onRefresh();
                       },
                     ),
@@ -107,7 +115,9 @@ class AddTaskPage extends StatelessWidget {
                   child: CustomButton(
                     txt: "Save",
                     onPressed: () {
-                      if (taskModel!.id!.isNotEmpty) {
+                      if (taskModel != null &&
+                          taskModel!.id != null &&
+                          taskModel!.id!.isNotEmpty) {
                         provider.updateTask(taskModel!);
                         Navigator.pop(context);
                       } else {
@@ -115,10 +125,7 @@ class AddTaskPage extends StatelessWidget {
                           provider.addTask();
                           Navigator.pop(context);
                         } else {
-                          final snackBar = CustomSnackBar.errorSnackBar(
-                            "Task Can't be empty",
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          CustomToast().errorToast("Task Can't be empty");
                         }
                       }
                     },
