@@ -36,6 +36,8 @@ class AuthenticationProvider extends ChangeNotifier {
           return "No user found with this email.";
         } else if (e.code == "invalid-email") {
           return "Invalid email address.";
+        } else if (e.code == "invalid-credential") {
+          return "Invalid email address or password";
         } else {
           return e.message ?? "Login failed.";
         }

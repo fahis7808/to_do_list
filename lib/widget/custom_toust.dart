@@ -9,7 +9,7 @@ class CustomToast {
       fontSize: 15.sp,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: AppColor.bgClr,
+      backgroundColor: AppColor.white,
       textColor: AppColor.error,
     );
   }

@@ -81,14 +81,23 @@ class RegistrationPage extends StatelessWidget {
                   CustomButton(
                     txt: "Continue",
                     onPressed: () async {
-                      provider.createAccount().then((val) {
-                        if (val == "success") {
-                          CustomToast().successToast("Registered Successfully!");
-                          Navigator.of(context).pushReplacementNamed("/home");
-                        } else {
-                          CustomToast().errorToast(val);
-                           }
-                      });
+                      if (provider.userModel.email != null &&
+                          provider.password != "") {
+                        provider.createAccount().then((val) {
+                          if (val == "success") {
+                            CustomToast().successToast(
+                              "Registered Successfully!",
+                            );
+                            Navigator.of(context).pushReplacementNamed("/home");
+                          } else {
+                            CustomToast().errorToast(val);
+                          }
+                        });
+                      } else {
+                        CustomToast().errorToast(
+                          "Email and Password Can't be empty",
+                        );
+                      }
                     },
                   ),
                   SizedBox(height: 1.h),
