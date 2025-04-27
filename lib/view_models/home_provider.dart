@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:untitled/model/task_model.dart';
 import 'package:untitled/services/firebase_task_Service.dart';
 
@@ -37,12 +38,23 @@ class HomeProvider extends ChangeNotifier {
     taskModel.sharedWith = [];
   }
 
-  Future updateTask(TaskModel task) async{
+  Future updateTask(TaskModel task) async {
     await FirebaseTaskService().updateTask(task);
   }
 
   Future deleteTask(String taskId) async {
     await FirebaseTaskService().deleteTask(taskId);
+  }
+
+  void shareTask(TaskModel task, BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await SharePlus.instance.share(
+      ShareParams(
+        title: task.title,
+        text: task.description,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      ),
+    );
   }
 
   onRefresh() {

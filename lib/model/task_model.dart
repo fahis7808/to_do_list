@@ -4,7 +4,6 @@ class TaskModel {
   String? description;
   List<String>? sharedWith;
   DateTime? createdAt;
-  DateTime? updates;
 
   TaskModel({
     this.id,
@@ -12,7 +11,6 @@ class TaskModel {
     this.description,
     this.sharedWith,
     this.createdAt,
-    this.updates,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,7 +20,6 @@ class TaskModel {
       "description": description,
       "sharedWith": sharedWith,
       "createdAt": createdAt?.toIso8601String(),
-      "updatedAt": updates?.toIso8601String(),
     };
   }
 
@@ -35,10 +32,6 @@ class TaskModel {
       createdAt:
           map["createdAt"] != null && map["createdAt"].toString().isNotEmpty
               ? DateTime.parse(map["createdAt"])
-              : null,
-      updates:
-          map["updatedAt"] != null && map["updatedAt"].toString().isNotEmpty
-              ? DateTime.parse(map["updatedAt"])
               : null,
     );
   }

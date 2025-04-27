@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:untitled/view_models/auth_provider.dart';
 import 'package:untitled/view_models/home_provider.dart';
-import 'package:untitled/views/home_page.dart';
-import 'package:untitled/views/login_screen.dart';
+import 'package:untitled/views/home/home_page.dart';
+import 'package:untitled/views/authentication/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:untitled/views/registration_screen.dart';
-import 'package:untitled/views/screen_flow.dart';
+import 'package:untitled/views/authentication/registration_screen.dart';
+import 'package:untitled/views/authentication/screen_flow.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

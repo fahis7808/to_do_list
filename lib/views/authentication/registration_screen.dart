@@ -4,17 +4,15 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:untitled/utlities/app_font.dart';
 import 'package:untitled/utlities/colors.dart';
 import 'package:untitled/view_models/auth_provider.dart';
-import 'package:untitled/widget/custom_button.dart';
-import 'package:untitled/widget/custom_text_field.dart';
+import 'package:untitled/widget/custom_toust.dart';
+import '../../widget/custom_button.dart';
+import '../../widget/custom_text_field.dart';
 
-import '../widget/sustom_snack_bar.dart';
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class RegistrationPage extends StatelessWidget {
+  const RegistrationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final provider = Provider.of<AuthenticationProvider>(
       context,
       listen: false,
@@ -34,52 +32,62 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.lock, size: 7.h, color: theme.primaryColor),
-                  SizedBox(height: 1.5.h),
-                  Text(
-                    "Welcome Back",
-                    style: AppFont.head,
-                  ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    "Login to your account",
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey[600]),
-                  ),
+                  // Icon(Icons.lock, size: 7.h, color: Theme.of(context).primaryColor),
+                  // SizedBox(height: 1.5.h),
+                  Text("Create an account", style: AppFont.head),
+
+                  // SizedBox(height: 1.h),
                   SizedBox(height: 3.h),
                   CustomTextField(
-                    value: provider.email,
+                    value: provider.userModel.name,
+                    labelText: "Name",
+                    prefixIcon: Icons.person_2_outlined,
+                    onChanged: (val) {
+                      provider.userModel.name = val;
+                    },
+                  ),
+                  SizedBox(height: 1.h),
+                  CustomTextField(
+                    value: provider.userModel.mobile,
+                    labelText: "Number",
+                    prefixIcon: Icons.phone_outlined,
+                    onChanged: (val) {
+                      provider.userModel.mobile = val;
+                    },
+                  ),
+                  SizedBox(height: 1.h),
+                  CustomTextField(
+                    value: provider.userModel.email,
                     labelText: "Email",
                     prefixIcon: Icons.email_outlined,
                     keyboard: TextInputType.emailAddress,
                     onChanged: (val) {
-                      provider.email = val;
+                      provider.userModel.email = val;
                     },
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 1.h),
                   CustomTextField(
                     value: provider.password,
                     labelText: "Password",
+                    keyboard: TextInputType.emailAddress,
                     prefixIcon: Icons.lock_outline,
+                    obscureText: true,
                     onChanged: (val) {
                       provider.password = val;
                     },
-                    obscureText: true,
                   ),
+
                   SizedBox(height: 3.h),
                   CustomButton(
-                    txt: "Login",
+                    txt: "Continue",
                     onPressed: () async {
-                      provider.login().then((val){
+                      provider.createAccount().then((val) {
                         if (val == "success") {
-                          final snackBar = CustomSnackBar.successesSnackBar(
-                            "Logged in Successfully!",
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          CustomToast().successToast("Registered Successfully!");
                           Navigator.of(context).pushReplacementNamed("/home");
                         } else {
-                          final snackBar = CustomSnackBar.errorSnackBar(val);
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
+                          CustomToast().errorToast(val);
+                           }
                       });
                     },
                   ),
@@ -88,15 +96,13 @@ class LoginScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Don\'t have account? '),
+                      const Text('Already have an account? '),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(
-                            context,
-                          ).pushReplacementNamed('/registration');
+                          Navigator.of(context).pushReplacementNamed('/login');
                         },
                         child: const Text(
-                          'Register',
+                          'Login',
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
