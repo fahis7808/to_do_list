@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/model/task_model.dart';
 import 'package:untitled/utlities/app_font.dart';
 import 'package:untitled/utlities/colors.dart';
 import 'package:untitled/view_models/home_provider.dart';
@@ -9,13 +8,41 @@ import 'package:untitled/widget/task_card.dart';
 
 import '../../view_models/auth_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<HomeProvider>(context, listen: false);
+    provider.fetchInitialTasks();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        provider.fetchTasks();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<HomeProvider>(context);
     final authProvider = Provider.of<AuthenticationProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.primaryClr,
@@ -30,34 +57,19 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<List<TaskModel>>(
-        stream: provider.getTasks(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return const Center(child: Text('Something went wrong'));
-          }
-
-          final tasks = snapshot.data ?? [];
-
-          if (tasks.isEmpty) {
-            return const Center(child: Text('No tasks found.'));
-          }
-          return ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
-              return TaskCard(task: task);
-            },
-          );
+      body: provider.tasks.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        controller: _scrollController,
+        itemCount: provider.tasks.length,
+        itemBuilder: (context, index) {
+          final task = provider.tasks[index];
+          return TaskCard(task: task);
         },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.primaryClr,
-        child: Icon(Icons.add, color: AppColor.white, size: 30, weight: 30),
+        child: Icon(Icons.add, color: AppColor.white, size: 30),
         onPressed: () {
           showDialog(context: context, builder: (context) => AddTaskPage());
         },
@@ -65,3 +77,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+
