@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType? keyboard;
   final bool obscureText;
   final int minLines;
+  final Widget? suffix;
 
   const CustomTextField({
     super.key,
@@ -20,7 +21,7 @@ class CustomTextField extends StatefulWidget {
     this.onChanged,
     this.keyboard,
     this.obscureText = false,
-    this.minLines = 1,
+    this.minLines = 1, this.suffix,
   });
 
   @override
@@ -68,6 +69,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             widget.prefixIcon != null
                 ? Icon(widget.prefixIcon, size: 22.sp)
                 : null,
+        suffixIcon: widget.suffix,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.w)),
       ),
     );

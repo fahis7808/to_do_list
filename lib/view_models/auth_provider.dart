@@ -6,10 +6,21 @@ import '../services/firebase_data_services.dart';
 class AuthenticationProvider extends ChangeNotifier {
   String email = "";
   String password = "";
+  bool showPassword = true;
+
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners(); }
+
+
 
   UserModel userModel = UserModel();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  
   User? _user;
 
   AuthenticationProvider() {
@@ -70,5 +81,9 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future logOut() async{
     await _auth.signOut();
+  }
+
+  onRefresh(){
+    notifyListeners();
   }
 }

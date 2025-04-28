@@ -7,7 +7,7 @@ import 'package:untitled/utlities/colors.dart';
 import 'package:untitled/view_models/home_provider.dart';
 import 'package:untitled/widget/custom_button.dart';
 import 'package:untitled/widget/custom_text_field.dart';
-import 'package:untitled/widget/custom_toust.dart';
+import 'package:untitled/widget/functions.dart';
 
 class AddTaskPage extends StatelessWidget {
   final TaskModel? taskModel;
@@ -70,7 +70,7 @@ class AddTaskPage extends StatelessWidget {
                           CustomToast().errorToast("Please enter an email");
                           return;
                         }
-                        final bool emailCheck = provider.isValidEmail(email);
+                        final bool emailCheck = CustomFunction().isValidEmail(email);
 
                         if (!emailCheck) {
                           CustomToast().errorToast("Invalid Email");
