@@ -11,7 +11,7 @@ class FirebaseTaskService {
   Future<List<_TaskWithSnapshot>> getTask(
       String email, {
         DocumentSnapshot? lastDocument,
-        int limit = 5,
+        int limit = 10,
       }) async {
     Query query = _ref
         .where('sharedWith', arrayContains: email)
